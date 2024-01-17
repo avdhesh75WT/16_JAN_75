@@ -1,0 +1,20 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const user_1 = require("../controllers/user");
+const auth_1 = require("../middleware/auth");
+const cloudinary_1 = require("../cloudinary");
+const router = express_1.default.Router();
+router.get("/", user_1.getAllUsers);
+router.get("/:userId", auth_1.verifyToken, user_1.getUser);
+router.post("/:userId/create", auth_1.verifyToken, cloudinary_1.upload.single("photo"), user_1.createPost);
+router.patch("/:userId/update", auth_1.verifyToken, user_1.updateUser);
+router.patch("/:userId/:postId/update", auth_1.verifyToken, user_1.updatePost);
+router.delete("/:userId/:postId/delete", auth_1.verifyToken, user_1.deletePost);
+router.patch("/:userId/:postId/handleLike", auth_1.verifyToken, user_1.likeHandler);
+router.post("/:userId/:postId/comment", auth_1.verifyToken, user_1.createComment);
+router.patch("/:userId/:postId/:commentId/update", auth_1.verifyToken, user_1.updateComment);
+exports.default = router;
